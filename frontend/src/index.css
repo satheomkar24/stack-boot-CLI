@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url(/css/main.css);
+
+:root {
+  --font-family: "Inter", sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  color: #686868;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-control {
+  box-shadow: none !important;
+}

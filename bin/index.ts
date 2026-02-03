@@ -4,6 +4,7 @@ import { program } from "commander";
 import { normalizeConfig } from "../src/normalizeConfig.js";
 import { parseArgs } from "../src/parseArgs.js";
 import { runPrompts } from "../src/promptFlow.js";
+import { runCreateCommand } from "../src/runCreateCommand.js";
 
 program
   .name("stack-forge-create-app")
@@ -39,7 +40,8 @@ async function main() {
     config = normalizeConfig(prompted, "interactive");
   }
 
-  console.log("✅ Parsed Config:", config);
+  await runCreateCommand(config);
+  console.log("✅ Project created successfully");
 }
 
 // Run the main function and handle uncaught errors
