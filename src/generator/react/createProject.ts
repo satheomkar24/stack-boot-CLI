@@ -4,12 +4,14 @@ import fs from "fs-extra";
 import { parseTarget } from "../../utils/parseTarget.js";
 import { copyBaseTemplate } from "./copyBaseTemplate.js";
 import { mergeVariant } from "./mergeVariant.js";
-import { generateRoutesIndex } from "./generateRoutesIndex.js";
+// import { generateRoutesIndex } from "./generateRoutesIndex.js";
 import { resolveReactVersion } from "./resolveReactVersion.js";
 import { updatePackageJson } from "./updatePackageJson.js";
 import { resolveTemplatePath } from "../../utils/resolveTemplatePath.js";
 import { log, logStep } from "../../utils/logger.js";
 import { isDirEmpty } from "../../utils/directoryCheck.js";
+import { updateReadme } from "../../utils/updateReadme.js";
+import { updateHtmlTitle } from "../../utils/updateHtmlTitle.js";
 
 function resolveVariants(input: string[]) {
   const set = new Set(["base"]);
@@ -35,7 +37,6 @@ export async function createReactProject({
   targetDir: string;
 }) {
   logStep(2, "Creating project directory");
-
   const projectPath = path.resolve(targetDir);
   const isCurrentDir = projectPath === process.cwd();
 
@@ -61,7 +62,6 @@ export async function createReactProject({
   const basePath = resolveTemplatePath(`${framework}/base`);
 
   logStep(3, "Copying template files");
-
   await copyBaseTemplate(basePath, projectPath);
 
   for (const v of finalVariants) {
@@ -71,7 +71,7 @@ export async function createReactProject({
     }
   }
 
-  await generateRoutesIndex(projectPath, finalVariants);
+  // await generateRoutesIndex(projectPath, finalVariants);
 
   const reactVersion = await resolveReactVersion(major);
 
@@ -91,11 +91,17 @@ Otherwise, you may need to manually adjust dependency versions.
   }
 
   logStep(4, "Updating package name");
-
   await updatePackageJson(projectPath, name, reactVersion);
 
-  logStep(5, "Finalizing setup");
+  logStep(5, "Updating HTML title");
+  const indexHtmlPath = path.join(projectPath, "index.html");
+  await updateHtmlTitle(indexHtmlPath, name);
 
+  logStep(6, "Updating README.md");
+  const readmePath = path.join(projectPath, "README.md");
+  await updateReadme(readmePath, name);
+
+  logStep(7, "Finalizing setup");
   const cdCommand = isCurrentDir ? "." : name;
 
   log.success(`

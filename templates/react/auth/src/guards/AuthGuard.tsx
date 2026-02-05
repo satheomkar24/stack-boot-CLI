@@ -1,5 +1,5 @@
-import { storageService } from "../services/storageService";
-import type { IUser } from "../types/auth";
+import { storageService } from "../../../base/src/services/storageService";
+import type { IUser } from "../../../base/src/types/auth";
 import { type ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 

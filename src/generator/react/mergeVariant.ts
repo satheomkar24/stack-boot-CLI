@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 
 export async function mergeVariant(variantPath: string, projectPath: string) {
-  if (!fs.existsSync(variantPath)) return;
+  if (!(await fs.pathExists(variantPath))) return;
 
   const entries = await fs.readdir(variantPath, { withFileTypes: true });
 
@@ -16,12 +16,8 @@ export async function mergeVariant(variantPath: string, projectPath: string) {
       continue;
     }
 
-    // file case
-    if (await fs.pathExists(dest)) {
-      console.warn(`⚠️ Skipped existing file: ${dest}`);
-      continue;
-    }
-
-    await fs.copyFile(src, dest);
+    // file case → ALWAYS overwrite
+    await fs.ensureDir(path.dirname(dest));
+    await fs.copy(src, dest, { overwrite: true });
   }
 }

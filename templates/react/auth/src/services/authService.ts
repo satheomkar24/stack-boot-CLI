@@ -1,7 +1,7 @@
 import type { NavigateFunction } from "react-router-dom";
-import { resetAuth } from "../store/authSlice";
-import { apiService } from "./apiService";
-import type { AppDispatch } from "../store";
+import { resetAuth } from "../../../base/src/store/authSlice";
+import { apiService } from "../../../base/src/services/apiService";
+import type { AppDispatch } from "../../../base/src/store";
 import type {
   IAuthResponse,
   IForgotPassword,
@@ -9,7 +9,7 @@ import type {
   IRegisterPayload,
   IResetPasswordPayload,
 } from "../types/auth";
-import type { IGenericResponse } from "../types/common";
+import type { IGenericResponse } from "../../../base/src/types/common";
 
 class AuthService {
   private navigate!: NavigateFunction;

@@ -11,22 +11,40 @@ interface PromptAnswers {
   isComplete: true;
 }
 
+interface ExitOptions {
+  code?: number; // exit code, default 0
+  message?: string; // message to show before exit
+}
+
+function exit(options: ExitOptions = {}) {
+  const { code = 0, message } = options;
+  if (message) console.log(message);
+  process.exit(code);
+}
+
 export async function runPrompts(
   partial: PartialInput,
 ): Promise<PromptAnswers> {
   // 1️⃣ Resolve stack FIRST (mandatory)
   if (!partial.stack) {
-    const { stack } = await prompts({
-      type: "select",
-      name: "stack",
-      message: "Select a stack",
-      choices: [
-        { title: "React", value: "react" },
-        { title: "Node.js", value: "node" },
-        { title: "Python (FastAPI)", value: "fastapi" },
-        { title: "Java (Spring Boot)", value: "java" },
-      ],
-    });
+    const { stack } = await prompts(
+      {
+        type: "select",
+        name: "stack",
+        message: "Select a stack",
+        choices: [
+          { title: "React", value: "react" },
+          { title: "Node.js", value: "node" },
+          { title: "Python (FastAPI)", value: "fastapi" },
+          { title: "Java (Spring Boot)", value: "java" },
+        ],
+      },
+      {
+        onCancel: () => {
+          exit({ code: 1, message: "\n🛑 Prompt cancelled by user." });
+        },
+      },
+    );
 
     partial.stack = stack;
   }
@@ -88,6 +106,8 @@ export async function runPrompts(
     }
 
     case "java": {
+      if (!partial.projectName) addProjectNamePrompt();
+
       if (!partial.groupId) {
         questions.push({
           type: "text",
@@ -98,14 +118,18 @@ export async function runPrompts(
             /^[a-zA-Z_][a-zA-Z0-9_.]*$/.test(v) ? true : "Invalid Java groupId",
         });
       }
-
-      if (!partial.projectName) addProjectNamePrompt();
       break;
     }
   }
 
   // 3️⃣ Ask remaining questions
-  const response = questions.length ? await prompts(questions) : {};
+  const response = questions.length
+    ? await prompts(questions, {
+        onCancel: () => {
+          exit({ code: 1, message: "\n🛑 Prompt cancelled by user." });
+        },
+      })
+    : {};
 
   // 4️⃣ Merge args + prompts
   return {

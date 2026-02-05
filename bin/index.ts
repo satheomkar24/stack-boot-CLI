@@ -6,11 +6,32 @@ import { parseArgs } from "../src/parseArgs.js";
 import { runPrompts } from "../src/promptFlow.js";
 import { runCreateCommand } from "../src/runCreateCommand.js";
 import { log } from "../src/utils/logger.js";
+import { checkNodeVersion } from "../src/utils/checkNodeVersion.js";
+import { getCliVersion } from "../src/utils/getCliVersion.js";
+import { checkForUpdate } from "../src/utils/checkForUpdate.js";
+
+process.on("SIGINT", () => {
+  log.info("\n🛑 CLI process cancelled by user.");
+  process.exit(130);
+});
+
+// environment checks (non-blocking)
+const version = getCliVersion();
+
+const skipUpdateCheck =
+  process.argv.includes("-v") ||
+  process.argv.includes("--version") ||
+  process.argv.includes("--help");
+
+if (!skipUpdateCheck) {
+  checkNodeVersion();
+  checkForUpdate(version);
+}
 
 program
   .name("stackboot")
   .description("CLI to create projects from predefined templates")
-  .version("2.0.0", "-v, --version", "Show CLI version");
+  .version(version, "-v, --version", "Show CLI version");
 
 program
   .command("create")

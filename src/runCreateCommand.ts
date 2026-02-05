@@ -12,7 +12,7 @@ export async function runCreateCommand(config: ParsedConfig) {
         variants: [variant],
         targetDir,
       });
-      return;
+      break;
 
     default:
       break;

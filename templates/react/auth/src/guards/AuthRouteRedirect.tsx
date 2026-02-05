@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { storageService } from "../services/storageService";
+import { storageService } from "../../../base/src/services/storageService";
 import type { IUser } from "../types/auth";
 
 type PropTypes = {
