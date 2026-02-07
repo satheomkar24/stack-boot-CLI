@@ -47,7 +47,8 @@ const Header = () => {
   const handleLogout = async () => {
     const result = await CustomSwal.fire({
       icon: "warning",
-      title: "Are you sure you want to logout?",
+      title: "Are you sure?",
+      text: "Do you want to logout?",
       confirmButtonText: "Logout",
     });
     if (result.isConfirmed) {

@@ -6,4 +6,5 @@ export const CustomSwal = Swal.mixin({
   cancelButtonColor: "#3085d6",
   confirmButtonText: "Yes",
   cancelButtonText: "No",
+  theme: "dark",
 });

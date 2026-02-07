@@ -16,6 +16,7 @@ import { SpinnerContext } from "../../context/SpinnerContext";
 import { useAppSelector } from "../../hooks/redux";
 import useUserResolver from "../../resolvers/userResolver";
 import type { IUserPayload } from "../../types/user";
+import { CustomSwal } from "../../utils/CustomSwal";
 
 const ProfileForm = () => {
   const { setIsLoading } = useContext(SpinnerContext);
@@ -40,8 +41,15 @@ const ProfileForm = () => {
   };
 
   const resetPasswordHandler = async () => {
-    setIsLoading(true);
-    resetPasswordMutation.mutate(userData.email);
+    const result = await CustomSwal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "Do you want to reset your password?",
+    });
+    if (result.isConfirmed) {
+      setIsLoading(true);
+      resetPasswordMutation.mutate(userData.email);
+    }
   };
 
   return (

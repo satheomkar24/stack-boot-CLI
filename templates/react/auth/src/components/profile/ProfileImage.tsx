@@ -35,7 +35,7 @@ const ProfileImage = () => {
   };
 
   return (
-    <Card className="mb-4 h-100">
+    <Card className="mb-4">
       <CardHeader className="d-flex justify-content-between align-items-center">
         <span>Profile Image</span>
         {hasImageChanges && (
