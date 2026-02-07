@@ -7,25 +7,26 @@ import { SpinnerContext } from "../context/SpinnerContext";
 import { showError } from "../utils/showError";
 import { authService } from "../services/authService";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { storageService } from "../services/storageService";
 import type { IUserAuth } from "../types/auth";
 import { setAuth } from "../store/authSlice";
 
 const useUserResolver = () => {
   const { setIsLoading } = useContext(SpinnerContext);
+  const user = useAppSelector((state) => state.auth.user)!;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   authService.init(navigate, dispatch);
 
   //  Fetch current user data
   const { data: userData } = useApiQuery<IUser | undefined>(["user"], () =>
-    userService.getData(),
+    userService.getData(user.id),
   );
 
   //  Mutation: update values
   const updateUserMutation = useApiMutation(
-    ({ data }: { data: IUserPayload }) => userService.update(data),
+    ({ data }: { data: IUserPayload }) => userService.update(user.id, data),
     {
       onSuccess: (data) => {
         storageService.setLocal("userData", data);
@@ -41,7 +42,8 @@ const useUserResolver = () => {
 
   //  Mutation: update profile image
   const updateProfileImageMutation = useApiMutation(
-    ({ imageFile }: { imageFile: File }) => userService.uploadImage(imageFile),
+    ({ imageFile }: { imageFile: File }) =>
+      userService.uploadImage(user.id, imageFile),
     {
       onSuccess: (data) => {
         const prevUser = storageService.getLocal<IUserAuth>("userData");
@@ -73,7 +75,7 @@ const useUserResolver = () => {
   );
 
   //  Mutation: delete values
-  const deleteUserMutation = useApiMutation(() => userService.delete(), {
+  const deleteUserMutation = useApiMutation(() => userService.delete(user.id), {
     onSuccess: () => {
       toast.success("Profile deleted successfully");
       authService.logout();

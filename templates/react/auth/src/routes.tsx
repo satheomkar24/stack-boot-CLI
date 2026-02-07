@@ -6,6 +6,7 @@ import Layout from "./components/layout/Layout";
 import { AuthRouteRedirect } from "./guards/AuthRouteRedirect";
 import { AuthGuard } from "./guards/AuthGuard";
 import Profile from "./pages/Profile";
+import ActivateAccount from "./pages/auth/ActivateAccount";
 const Register = lazy(() => import("./pages/auth/Register"));
 const Login = lazy(() => import("./pages/auth/Login"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
@@ -60,6 +61,10 @@ const routes = createBrowserRouter([
       {
         path: "reset-password/:token",
         Component: ResetPassword,
+      },
+      {
+        path: "activate-account",
+        Component: ActivateAccount,
       },
     ],
   },

@@ -14,12 +14,13 @@ import { useContext } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import type { IGenericResponse } from "../../types/common";
 
 type RegisterProps = {
   onSubmit: (
     values: IRegister,
     formikHelpers: FormikHelpers<IRegister>,
-  ) => Promise<void>;
+  ) => Promise<IGenericResponse>;
 };
 
 export const RegisterForm = ({ onSubmit }: RegisterProps) => {
@@ -34,8 +35,8 @@ export const RegisterForm = ({ onSubmit }: RegisterProps) => {
   ) => {
     try {
       setIsLoading(true);
-      await onSubmit(values, formikHelpers);
-      toast.success("Registration successful");
+      const res = await onSubmit(values, formikHelpers);
+      toast.success(res.message || "Registration successful");
       navigate("/auth/login");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
