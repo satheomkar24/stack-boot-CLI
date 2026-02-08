@@ -35,8 +35,8 @@ export async function runPrompts(
         choices: [
           { title: "React", value: "react" },
           { title: "Node.js", value: "node" },
-          { title: "Python (FastAPI)", value: "fastapi" },
-          { title: "Java (Spring Boot)", value: "java" },
+          // { title: "Python (FastAPI)", value: "fastapi" },
+          // { title: "Java (Spring Boot)", value: "java" },
         ],
       },
       {
@@ -99,7 +99,22 @@ export async function runPrompts(
       break;
     }
 
-    case "node":
+    case "node": {
+      if (!partial.projectName) addProjectNamePrompt();
+
+      if (!partial.variant) {
+        questions.push({
+          type: "select",
+          name: "variant",
+          message: "Select variant",
+          choices: [
+            { title: "base", value: "base" },
+            { title: "auth", value: "auth" },
+          ],
+        });
+      }
+      break;
+    }
     case "fastapi": {
       if (!partial.projectName) addProjectNamePrompt();
       break;

@@ -18,13 +18,13 @@ export function resolveProject(inputName: string): ResolvedProject {
     projectName = path.basename(cwd);
     targetDir = ".";
   } else {
-    projectName = inputName;
-    targetDir = `./${inputName}`;
+    projectName = inputName.trim().replace(/\s+/g, " ");
+    targetDir = `./${projectName}`;
   }
 
   // Validate the name
   const valid = validateProjectName(projectName);
   if (valid !== true) throw new Error(`Invalid project name: ${valid}`);
 
-  return { projectName: projectName.trim().replace(/\s+/g, " "), targetDir };
+  return { projectName: projectName, targetDir };
 }

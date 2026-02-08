@@ -1,32 +1,27 @@
 import path from "path";
-
-import { mergeVariant } from "../../utils/mergeVariant.js";
-import { resolveReactVersion } from "./resolveReactVersion.js";
-import { updatePackageJson } from "../../utils/updatePackageJson.js";
 import { resolveTemplatePath } from "../../utils/resolveTemplatePath.js";
 import { log, logStep } from "../../utils/logger.js";
-import { updateReadme } from "../../utils/updateReadme.js";
-import { updateHtmlTitle } from "../../utils/updateHtmlTitle.js";
-import { setupEnvFile } from "../../utils/setupEnvFile.js";
-import { resolveVariants } from "../../utils/resolveVariants.js";
 import { copyBaseTemplate } from "../../utils/copyBaseTemplate.js";
+import { resolveVariants } from "../../utils/resolveVariants.js";
+import { mergeVariant } from "../../utils/mergeVariant.js";
+import { updatePackageJson } from "../../utils/updatePackageJson.js";
+import { updateReadme } from "../../utils/updateReadme.js";
+import { setupEnvFile } from "../../utils/setupEnvFile.js";
 
 interface CreateProjectOptions {
   projectName: string;
-  version: number;
   variant: string;
-  isCurrentDir: boolean;
   projectPath: string;
+  isCurrentDir: boolean;
 }
 
-export async function createReactProject({
+export async function createNodeProject({
   projectName,
-  version,
   variant,
-  isCurrentDir,
   projectPath,
+  isCurrentDir,
 }: CreateProjectOptions) {
-  const framework = "react";
+  const framework = "node";
   const finalVariants = resolveVariants(variant);
 
   const basePath = resolveTemplatePath(`${framework}/base`);
@@ -41,36 +36,14 @@ export async function createReactProject({
     }
   }
 
-  logStep(6, "Resolving React version");
-  const reactVersion = await resolveReactVersion(version);
+  logStep(6, "Updating package name");
+  await updatePackageJson({ projectPath, projectName });
 
-  if (version !== 18) {
-    console.warn(`
-⚠️  Warning:
-This template is tested with React 18.
-You selected React ${reactVersion}.
-
-Some dependencies may not be compatible with this version.
-If you face dependency issues, you can try:
-
-  npm install --force
-
-Otherwise, you may need to manually adjust dependency versions.
-`);
-  }
-
-  logStep(7, "Updating package name");
-  await updatePackageJson({ projectPath, projectName, reactVersion });
-
-  logStep(8, "Updating HTML title");
-  const indexHtmlPath = path.join(projectPath, "index.html");
-  await updateHtmlTitle(indexHtmlPath, projectName);
-
-  logStep(9, "Updating README.md");
+  logStep(7, "Updating README.md");
   const readmePath = path.join(projectPath, "README.md");
   await updateReadme(readmePath, projectName);
 
-  logStep(10, "Finalizing setup");
+  logStep(8, "Finalizing setup");
   await setupEnvFile(projectPath);
   const cdCommand = isCurrentDir ? "." : projectName;
 

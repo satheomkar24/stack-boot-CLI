@@ -39,7 +39,7 @@ program
   .argument("[projectName]", "Name of the new project")
   .argument(
     "[variant]",
-    "React: Variant (e.g., base, auth, admin) / Java: Group Id",
+    "React/Node: Variant (e.g., base, auth, admin) / Java: Group Id",
   )
   .helpOption("-h, --help", "Display help for command")
   .action(async (stackVersion, projectName, variant) => {

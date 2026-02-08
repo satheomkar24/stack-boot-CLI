@@ -26,7 +26,7 @@ export function parseArgs(args: string[]): PartialInput {
     stack,
     version,
     projectName,
-    variant: stack === "react" ? variant : undefined,
+    variant: ["react", "node"].includes(stack!) ? variant : undefined,
     groupId: stack === "java" ? variant : undefined,
     isComplete: Boolean(stack && projectName),
   };
