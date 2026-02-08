@@ -8,6 +8,10 @@ Instead of generating bloated boilerplate, Stack Boot CLI follows a **Base + Var
 
 ✨ **Zero magic. Full control. Clean DX.**
 
+🌐 Website: https://stackbootcli.netlify.app
+📦 npm: https://www.npmjs.com/package/@stackboot/cli  
+⭐ GitHub: https://github.com/satheomkar24/stack-boot-CLI
+
 ---
 
 ## 🎯 Why Stack Boot CLI?
